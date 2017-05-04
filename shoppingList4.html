@@ -1,16 +1,27 @@
 <<!DOCTYPE html>
 <style>
 .NotSelected {
-    width: 80px;
-	height: 65px;
+    width: 30px;
+	height: 30px;
     position: absolute;
     left: 130px;
     cursor: pointer;
 }
+//pageone {background: #47e075}
+
+.header{
+  width: 100px;
+  height: 60px;
+}
+
+.ui-page-theme-a
+{
+  background-color:blue;
+}
 
 .Selected {
-    width: 80px;
-	height: 65px;
+    width: 30px;
+	height: 30px;
     display: none;
     position: absolute;
     left: 130px;
@@ -18,14 +29,12 @@
 }
 
 .Bin {
-	width: 45px;
-    height: 55px;
+	width: 30px;
+    height: 30px;
     float: right;
     cursor: pointer;
   }
-  body {
-      background-color: red;
-  }
+
 .header
 {
   width: 400px;
@@ -33,6 +42,7 @@
   left: px;
 
 }
+
 </style>
 
 <html>
@@ -85,6 +95,39 @@ function gotoQuantity(obj)
 
 
 }
+//setup for editing
+$(document).ready(function(){
+    $("#editList").click(function(){
+      // change the header name to "editing"
+      $("h3").show();
+      $("h2").hide();
+
+      // unhide the delete box
+
+        $(".Bin").show();
+        $(".selected").hide();
+        $(".notSelected").hide();
+        // shows "done" button and hides the "edit list" button
+          $("#editList").hide();
+          $("#editDone").show();
+    });
+$("#editDone").click(function(){
+  // change the header name to "My list"
+  $("h2").show();
+  $("h3").hide();
+  //hide the delete box
+  $(".Bin").hide();
+  $(".notSelected").show();
+
+// hides "done" button and shows the "edit list" button
+        $("#editDone").hide();
+        $("#editList").show();
+});
+});
+
+
+
+
 
 function showChosenItems()
 {
@@ -107,9 +150,15 @@ function showChosenItems()
         '</div>' +
         '</li>'
     ).appendTo('#shoppingList');
+}
+
+//setup for editing sets "finalShoppingList" page up as if its the final stage
+$("#editDone").hide();
+  $("#editList").show();
+  $(".Bin").hide();
+  $("h3").hide();
 
 
-  	 }
 	//you have to navigate to the page after you have populated
 	$.mobile.changePage("#finalShoppingList");
 	 $("#shoppingList").listview('refresh');
@@ -120,6 +169,7 @@ function showChosenItems()
 function ClearList()
 {
   localStorage.clear();
+  count1 = 0;
   location.reload();
   s.mobile.changePage("#pageone");
 }
@@ -133,13 +183,36 @@ function backToList()
 	$.mobile.changePage("#pageone");
 	$("#spin").val(0);
 }
+// trying to count number of items in a table
+function count() {
+  //alert('hello')
+//var count1 =  $('#shoppingList').length
+//var count1 = 0;
+//for (var i = 0; i < localStorage.length; i++) {
+	//count1 = count1 + 1;
+	//}
+alert(count1);
 
+
+
+}
 function saveChoice()
 {
+  //count1 = count1 + 1;
 	vegetableChosen = $("#vegname").text();
 	quantityChosen = $("#spin").val();
 	chosenItems[vegetableChosen] = quantityChosen;
 	localStorage.setItem("previousList",JSON.stringify(chosenItems));
+}
+
+
+var ul = document.getElementById("myul");
+var liNodes = [];
+
+for (var i = 0; i < ul.childNodes.length; i++) {
+	if (ul.childNodes[i].nodeName == "li") {
+		liNodes.push(ul.childNodes[i]);
+	}
 }
 
 
@@ -151,12 +224,13 @@ function saveChoice()
   <div data-role="header" class="header">
   <div data-role="navbar">
     <ul>
-      <li><a href="#Home">Items</a></li>
-      <li><a href="#finalShoppingList">List</a></li>
+      <li><a href="#pageone">List 1</a></li>
+
+      <li><a href="#pagetwo">List 2</a></li>
+      <li><a href="#finalShoppingList">Final List</a></li>
     </ul>
 </div>
 </div>
-
 
   <div data-role="main" class="ui-content">
 
@@ -164,7 +238,63 @@ function saveChoice()
       <input id="myFilter" data-type="search">
     </form>
 
-    <ul data-role="listview" data-filter="true" data-input="#myFilter" data-autodividers="true" data-inset="true">
+    <ul id="myul" data-role="listview" data-filter="true" data-input="#myFilter" data-autodividers="true" data-inset="true">
+      <li><a onclick="gotoQuantity(this)">Test</a></li>
+      <li><a onclick="gotoQuantity(this)">Apricots</a></li>
+      <li><a onclick="gotoQuantity(this)">Avocado</a></li>
+      <li><a onclick="gotoQuantity(this)">Aubergines</a></li>
+      <li><a onclick="gotoQuantity(this)">Bananas</a></li>
+      <li><a onclick="gotoQuantity(this)">Beetroot</a></li>
+      <li><a onclick="gotoQuantity(this)">Carrots</a></li>
+      <li><a onclick="gotoQuantity(this)">Courgettes</a></li>
+      <li><a onclick="gotoQuantity(this)">Chives</a></li>
+      <li><a onclick="gotoQuantity(this)">Fennel</a></li>
+      <li><a onclick="gotoQuantity(this)">Garlic</a></li>
+      <li><a onclick="gotoQuantity(this)">lemon</a></li>
+      <li><a onclick="gotoQuantity(this)">lime</a></li>
+      <li><a onclick="gotoQuantity(this)">Olive</a></li>
+      <li><a onclick="gotoQuantity(this)">Orange</a></li>
+      <li><a onclick="gotoQuantity(this)">Potatoes</a></li>
+      <li><a onclick="gotoQuantity(this)">Peas</a></li>
+      <li><a onclick="gotoQuantity(this)">Pineapple</a></li>
+      <li><a onclick="gotoQuantity(this)">Pumpkin</a></li>
+      <li><a onclick="gotoQuantity(this)">Strawberries</a></li>
+      <li><a onclick="gotoQuantity(this)">Satsuma</a></li>
+      <li><a onclick="gotoQuantity(this)">Tomato</a></li>
+      <li><a onclick="gotoQuantity(this)">Watermalon</a></li>
+      <li><a onclick="gotoQuantity(this)">Yam</a></li>
+      <li><a onclick="gotoQuantity(this)">ATesting</a></li>
+
+    </ul>
+  </div>
+
+<div data-role="footer" class="ui-content">
+  <label for="spin">Enter text</label>
+</div>
+</div>
+
+<div data-role="page" id="pagetwo">
+
+
+  <div data-role="header" class="header">
+  <div data-role="navbar">
+    <ul>
+      <li><a href="#pageone">List 1</a></li>
+
+      <li><a href="#pagetwo">List 2</a></li>
+      <li><a href="#finalShoppingList">Final List</a></li>
+
+    </ul>
+</div>
+</div>
+
+  <div data-role="main" class="ui-content">
+
+    <form class="SearchBar">
+      <input id="myFilter" data-type="search">
+    </form>
+
+    <ul id="myul" data-role="listview" data-filter="true" data-input="#myFilter" data-autodividers="true" data-inset="true">
       <li><a onclick="gotoQuantity(this)">Apples</a></li>
       <li><a onclick="gotoQuantity(this)">Apricots</a></li>
       <li><a onclick="gotoQuantity(this)">Avocado</a></li>
@@ -199,6 +329,9 @@ function saveChoice()
 </div>
 </div>
 
+
+
+
 <div data-role="page" id="quantity">
   <div data-role="main" class="ui-content">
   	  <div id="vegname"></div>
@@ -213,11 +346,27 @@ function saveChoice()
 </div>
 
 <div data-role="page" id="finalShoppingList">
+  <div data-role="header" class="header">
+  <div data-role="navbar">
+    <ul>
+      <li><a href="#pageone">List 1</a></li>
+      <li><a href="#pagetwo">List 2</a></li>
+      <li><a href="#finalShoppingList">Final List</a></li>
+    </ul>
+</div>
+</div>
+  <button id="editList">Edit List</button>
+  <button id="editDone">Done</button>
+      <h2>My List</h2>
+      <h3>Editing list: </h3>
   <div data-role="main" class="ui-content">
+
   <div id="allVegetablesChosen">
   <ul data-role="listview" data-filter="true" data-input="#myFilter" data-autodividers="true" data-inset="true" id="shoppingList">
   </ul>
   <button onclick="$.mobile.changePage('#pageone');">Choose Again</button>
+  <button onclick="count()">Count</button>
+
   <button class-"ui-btn ui-btn-inline ui-icon-shop ui-btn-icon-left" onclick ="ClearList()"> Clear List </button>
   </div>
   </div>

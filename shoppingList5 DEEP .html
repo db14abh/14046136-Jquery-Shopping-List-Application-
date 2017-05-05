@@ -1,0 +1,404 @@
+<<!DOCTYPE html>
+<style>
+.NotSelected {
+    width: 30px;
+	height: 30px;
+    position: absolute;
+    left: 130px;
+    cursor: pointer;
+}
+//pageone {background: #47e075}
+
+.ui-header{
+  background-color: black;
+  color: white;
+  text-shadow: 0px 0;
+  font-size: 22px;
+}
+
+.ui-page-theme-a
+{
+  background-color:blue;
+}
+
+
+.Selected {
+    width: 30px;
+	height: 30px;
+    display: none;
+    position: absolute;
+    left: 130px;
+    cursor: pointer;
+}
+
+.Bin {
+	width: 30px;
+    height: 30px;
+    float: right;
+    cursor: pointer;
+  }
+
+.header
+{
+  width: 400px;
+  height: 55px;
+  left: px;
+
+}
+
+.Ticked  .ui-btn {
+    background-color: lightGreen !important;
+}
+.activeLI .ui-btn
+{
+  background-color: #9EFF61 !important;
+  font-style: oblique;
+}
+
+</style>
+
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script src="http://dev.jtsage.com/cdn/spinbox/latest/jqm-spinbox.min.js"></script>
+</head>
+<body>
+
+<script>
+var chosenItems = {};
+
+$( document ).ready(function() {
+    // you can only save strings to local storage
+	// so all js objects have to be saved in the form JSON.stringify()
+	// and retrieved in the format JSON.parse(obj)
+    var q = localStorage.getItem("previousList");
+	if (q!=null) chosenItems = JSON.parse(q);
+});
+//Show CheckOff
+$(document).on('click', '.NotSelected', function() {
+    $(this).closest(".check").find(".Selected").show();
+});
+
+//Hide CheckOn
+$(document).on('click', '.Selected', function() {
+    $(this).hide();
+
+});
+
+$(document).on("pagecreate", "#finalShoppingList", function () {
+
+    $("#shoppingList").on("click", "li", function(){
+        $(this).toggleClass("Ticked");
+    });
+  });
+
+//Delete Item
+$(document).on('click', '.trash', function() {
+    $(this).closest('li').remove();
+
+// not working
+localStorage.removeItem('');
+});
+
+
+function gotoQuantity(obj)
+{
+	$.mobile.changePage("#quantity");
+	vegetablesChosen = $(obj).text();
+	$("#vegname").text(vegetablesChosen);
+
+
+}
+
+
+function showChosenItems()
+{
+	if ($("#spin").val()!="0")    saveChoice();
+
+	//remove existing items from shopping list
+	 $("#shoppingList").empty();
+
+	 //iterate through the dictionary chosenItems
+	 for (var key in chosenItems) {
+    vegData = key + ":" + chosenItems[key];
+    $('<li>').append('<a href="#" onclick= ""' + '<li class="ui-first-child ui-last-child">'+ vegData + '<a href="#" class= "trash ui-btn ui-icon-minus ui-btn-icon-left">' + '</a').appendTo('#shoppingList');}
+
+
+
+	//you have to navigate to the page after you have populated
+	$.mobile.changePage("#finalShoppingList");
+	 $("#shoppingList").listview('refresh');
+
+
+}
+
+function ClearList()
+{
+  localStorage.clear();
+  count1 = 0;
+  location.reload();
+  s.mobile.changePage("#pageone");
+}
+
+function goBack(){
+
+  $.mobile.changePage('#data-rel="back"');
+
+}
+function backToList()
+{
+	saveChoice();
+	$.mobile.changePage("#pageone");
+	$("#spin").val(0);
+}
+function saveChoice()
+{
+	vegetableChosen = $("#vegname").text();
+	quantityChosen = $("#spin").val();
+	chosenItems[vegetableChosen] = quantityChosen;
+	localStorage.setItem("previousList",JSON.stringify(chosenItems));
+}
+
+function newFoodEntry()
+{
+  var userInput = document.getElementById("myFilter").value;
+  var newFoodItem = '<li><a onclick="gotoQuantity(this)">Watermelon</a></li>';
+  newFoodItem = newFoodItem.replace("Watermelon", userInput);
+  $('#FoodList').append(newFoodItem);
+  $('#FoodList').listview('refresh');
+}
+
+function newDrinkEntry()
+{
+  var userInput = document.getElementById("DrinkFilter").value;
+  var newDrinkItem = '<li><a onclick="gotoQuantity(this)">7 up</a></li>';
+  newDrinkItem  = newDrinkItem .replace("7 up", userInput);
+  $('#DrinkList').append(newDrinkItem);
+  $('#DrinkList').listview('refresh');
+}
+
+function newTEntry()
+{
+  var userInput = document.getElementById("ToiletFilter").value;
+  var newTItem = '<li><a onclick="gotoQuantity(this)">Tissues</a></li>';
+  newTItem  = newTItem .replace("Tissues", userInput);
+  $('#TList').append(newTItem);
+  $('#TList').listview('refresh');
+}
+
+$(document).on("pagecreate", "#finalShoppingList", function () {
+  $("#shoppingList").on("click", "li", function(){
+    $(this).toggleClass("activeLI");
+
+  })
+})
+
+</script>
+
+<div data-role="page" id="pageone">
+
+
+  <div data-role="header" data-theme="ui-header">
+    <h1>Shopping List</h1>
+  <div data-role="navbar">
+  <a href="#" class="ui-btn ui-btn-inline ui-icon-back ui-btn-icon-left" data-rel="back"></a>
+    <ul>
+      <ul>
+        <li><a href="#pageone">Food</a></li>
+        <li><a href="#pagetwo">Drinks</a></li>
+        <li><a href="#pagethree">Toiletries</a></li>
+        <li><a href="#finalShoppingList">Final List</a></li>
+      </ul>
+    </ul>
+</div>
+</div>
+
+  <div data-role="main" class="ui-content">
+
+    <form class="SearchBar">
+      <input id="myFilter" data-type="search">
+	  <input type="button" id="AddBtn" value="Add Item" onclick="newFoodEntry()">
+    </form>
+
+    <ul id="FoodList" data-role="listview" data-filter="true" data-input="#myFilter" data-autodividers="true" data-inset="true">
+
+      <li><a onclick="gotoQuantity(this)">Apricots</a></li>
+      <li><a onclick="gotoQuantity(this)">Avocado</a></li>
+      <li><a onclick="gotoQuantity(this)">Aubergines</a></li>
+      <li><a onclick="gotoQuantity(this)">Bananas</a></li>
+      <li><a onclick="gotoQuantity(this)">Beetroot</a></li>
+      <li><a onclick="gotoQuantity(this)">Carrots</a></li>
+      <li><a onclick="gotoQuantity(this)">Courgettes</a></li>
+      <li><a onclick="gotoQuantity(this)">Chives</a></li>
+      <li><a onclick="gotoQuantity(this)">Fennel</a></li>
+      <li><a onclick="gotoQuantity(this)">Garlic</a></li>
+      <li><a onclick="gotoQuantity(this)">lemon</a></li>
+      <li><a onclick="gotoQuantity(this)">lime</a></li>
+      <li><a onclick="gotoQuantity(this)">Olive</a></li>
+      <li><a onclick="gotoQuantity(this)">Orange</a></li>
+      <li><a onclick="gotoQuantity(this)">Potatoes</a></li>
+      <li><a onclick="gotoQuantity(this)">Peas</a></li>
+      <li><a onclick="gotoQuantity(this)">Pineapple</a></li>
+      <li><a onclick="gotoQuantity(this)">Pumpkin</a></li>
+      <li><a onclick="gotoQuantity(this)">Strawberries</a></li>
+      <li><a onclick="gotoQuantity(this)">Satsuma</a></li>
+      <li><a onclick="gotoQuantity(this)">Tomato</a></li>
+      <li><a onclick="gotoQuantity(this)">Watermelon</a></li>
+
+
+
+    </ul>
+  </div>
+
+<div data-role="footer" class="ui-content">
+
+  <label for="spin">Enter text</label>
+</div>
+</div>
+
+<div data-role="page" id="pagetwo">
+
+
+  <div data-role="header" data-theme="ui-header">
+   <h1>Shopping List</h1>
+  <div data-role="navbar">
+  <a href="#" class="ui-btn ui-btn-inline ui-icon-back ui-btn-icon-left" data-rel="back">back</a>
+    <ul>
+      <ul>
+        <li><a href="#pageone">Food</a></li>
+        <li><a href="#pagetwo">Drinks</a></li>
+        <li><a href="#pagethree">Toiletries</a></li>
+        <li><a href="#finalShoppingList">Final List</a></li>
+      </ul>
+    </ul>
+</div>
+</div>
+
+  <div data-role="main" class="ui-content">
+
+    <form class="SearchBar">
+      <input id="DrinkFilter" data-type="search">
+	   <input type="button" id="AddBtn" value="Add Item" onclick="newDrinkEntry()">
+    </form>
+
+    <ul id="DrinkList" data-role="listview" data-filter="true" data-input="#DrinkFilter" data-autodividers="true" data-inset="true">
+      <li><a onclick="gotoQuantity(this)">Coke</a></li>
+      <li><a onclick="gotoQuantity(this)">Dr Pepper</a></li>
+      <li><a onclick="gotoQuantity(this)">Fanta</a></li>
+      <li><a onclick="gotoQuantity(this)">Spite</a></li>
+      <li><a onclick="gotoQuantity(this)">Orange juice</a></li>
+      <li><a onclick="gotoQuantity(this)">Tropical juice</a></li>
+      <li><a onclick="gotoQuantity(this)">Water</a></li>
+      <li><a onclick="gotoQuantity(this)">7 up</a></li>
+    </ul>
+  </div>
+
+<div data-role="footer" class="ui-content">
+
+  <label for="spin">Enter text</label>
+</div>
+</div>
+<div data-role="page" id="pagethree">
+
+
+  <div data-role="header" data-theme="ui-header">
+    <h1>Shopping List</h1>
+  <div data-role="navbar">
+  <a href="#" class="ui-btn ui-btn-inline ui-icon-back ui-btn-icon-left" data-rel="back">back</a>
+    <ul>
+      <ul>
+        <li><a href="#pageone">Food</a></li>
+        <li><a href="#pagetwo">Drinks</a></li>
+        <li><a href="#pagethree">Toiletries</a></li>
+        <li><a href="#finalShoppingList">Final List</a></li>
+      </ul>
+    </ul>
+</div>
+</div>
+
+  <div data-role="main" class="ui-content">
+
+    <form class="SearchBar">
+      <input id="ToiletFilter" data-type="search">
+	   <input type="button" id="AddBtn" value="Add Item" onclick="newTEntry()">
+    </form>
+
+    <ul id="TList" data-role="listview" data-filter="true" data-input="#ToiletFilter" data-autodividers="true" data-inset="true">
+      <li><a onclick="gotoQuantity(this)">Bleach</a></li>
+      <li><a onclick="gotoQuantity(this)">Bodywash</a></li>
+      <li><a onclick="gotoQuantity(this)">Deodrant</a></li>
+      <li><a onclick="gotoQuantity(this)">Face wash</a></li>
+      <li><a onclick="gotoQuantity(this)">Floss</a></li>
+      <li><a onclick="gotoQuantity(this)">Facecream</a></li>
+      <li><a onclick="gotoQuantity(this)">Olive Oil</a></li>
+      <li><a onclick="gotoQuantity(this)">Toilet roll</a></li>
+      <li><a onclick="gotoQuantity(this)">Tissues</a></li>
+
+    </ul>
+  </div>
+
+<div data-role="footer" class="ui-content">
+
+  <label for="spin">Enter text</label>
+</div>
+</div>
+
+
+
+<div data-role="page" id="quantity">
+  <div data-role="main" class="ui-content">
+  	  <div id="vegname"></div>
+     <div class="ui-field-contain">
+       <label for="spin">Quantity</label>
+       <input type="text" data-role="spinbox" name="spin" id="spin" value="0" min="0" max="10" />
+      </div>
+      <button onclick="backToList()">Choose Again</button>
+      <button onclick="showChosenItems()">Add To list</button>
+ </div>
+
+</div>
+
+<div data-role="page" id="finalShoppingList">
+  <div data-role="header" data-theme="ui-header">
+    <h1> Title </h1>
+  <div data-role="navbar">
+    <ul>
+      <ul>
+        <li><a href="#pageone">Food</a></li>
+        <li><a href="#pagetwo">Drinks</a></li>
+        <li><a href="#pagethree">Toiletries</a></li>
+        <li><a href="#finalShoppingList">Final List</a></li>
+      </ul>
+    </ul>
+</div>
+</div>
+      <h2>My List</h2>
+  <div data-role="main" class="ui-content">
+
+  <div id="allVegetablesChosen">
+  <ul data-role="listview" data-filter="true" data-input="#myFilter" data-autodividers="true" data-inset="true" id="shoppingList">
+  </ul>
+  <button onclick="$.mobile.changePage('#pageone');">Choose Again</button>
+  <!-- <button onclick="count()">Count</button> -->
+
+  <button class-"ui-btn ui-btn-inline ui-icon-shop ui-btn-icon-left" onclick ="ClearList()"> Clear List </button>
+  </div>
+  </div>
+
+  <div data-role="page" id="Home">
+    <div data-role="main" class="ui-content">
+    <div id="allVegetablesChosen">
+    <ul data-role="listview" data-filter="true" data-input="#myFilter" data-autodividers="true" data-inset="true" id="Home">
+    </ul>
+    <button onclick="$.mobile.changePage('#pageone');">Test</button>
+
+    </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
